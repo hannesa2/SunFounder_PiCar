@@ -25,7 +25,8 @@ setup(
     url='https://github.com/sunfounder/SunFounder_PiCar',
     author='SunFounder',
     author_email='support@sunfounder.com',
-    license='GNU',
+    license='GPL-2.0-or-later',
+    license_files=['LICENSE'],
     zip_safe=False,
     classifiers=[
         # How mature is this project? Common values are
@@ -38,10 +39,8 @@ setup(
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Build Tools',
 
-        # Pick your license as you wish (should match "license" above)
-        'License :: OSI Approved :: GNU License',
 
-        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.x',
     ],
 
     keywords='sunfounder raspberry pi robot car',
