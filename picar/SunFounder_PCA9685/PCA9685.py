@@ -41,7 +41,7 @@ class PWM(object):
     _DEBUG = False
     _DEBUG_INFO = 'DEBUG "PCA9685.py":'
 
-    def __init__(self, bus_number=1, address=0x40):
+    def __init__(self, bus_number=1, address=0x42):
         self.address = address
         self.bus_number = bus_number
         self.bus = smbus.SMBus(self.bus_number)
