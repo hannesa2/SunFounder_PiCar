@@ -52,3 +52,49 @@ website:
 
 E-mail:
 	service@sunfounder.com, support@sunfounder.com
+
+----------------------------------------------
+<a id=troubleshooting></a>
+## Troubleshooting
+
+### Motor and servo control not working after OS/kernel upgrade
+
+**Symptom:**
+- Motors and servos do not respond
+- `picar servo-install` prints *Servos now are set to 90 degree.* but nothing actually moves
+- Running `python3 -c "import picar; picar.setup()"` shows:
+
+```
+[Errno 5] Input/output error
+I2C bus number is: 1
+Device is missing.
+```
+
+**Root cause:**
+
+The PCA9685 PWM chip on this board has address pin **A1 tied high**, so it responds at I2C address **`0x42`** instead of the chip factory default `0x40`. Verify with:
+
+```bash
+sudo apt-get install -y i2c-tools
+sudo i2cdetect -y 1
+```
+
+You should see a device at `42`, not `40`.
+
+When `install_dependencies.sh` is re-run after a kernel or OS upgrade, it re-clones and reinstalls the picar module from GitHub, resetting the address back to the hardcoded default `0x40`. All I2C communication then silently fails.
+
+> **Note:** The misleading success message from `picar servo-install` is printed unconditionally at the end of the function — I2C errors are swallowed silently inside `_write_byte_data`.
+
+**Fix:**
+
+The default address in `PCA9685.py` and `Servo.py` has been changed to `0x42` in this fork. After any reinstall, use this repo (not the upstream SunFounder original):
+
+```bash
+cd ~/git/SunFounder_PiCar
+sudo python3 setup.py install
+```
+
+Then verify:
+```bash
+picar servo-install   # servos should physically move to 90°
+```
